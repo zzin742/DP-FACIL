@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DP FÁCIL - Departamento Pessoal Simplificado</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Animações e transições personalizadas */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.3s ease-out forwards;
+        }
+        
+        .section-transition {
+            transition: all 0.3s ease;
+        }
+        
+        .section-transition:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Estilos para inputs e botões */
+        .input-focus {
+            transition: all 0.3s ease;
+        }
+        
+        .input-focus:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            outline: none;
+        }
+        
+        .btn-primary {
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        
+        /* Estilos para o quiz */
+        .quiz-option {
+            transition: all 0.2s ease;
+        }
+        
+        .quiz-option:hover {
+            background-color: #f0f9ff;
+            padding: 8px;
+            border-radius: 8px;
+        }
+        
+        /* Indicador de força da senha */
+        .strength-weak { background-color: #f87171; height: 5px; }
+        .strength-medium { background-color: #fbbf24; height: 5px; }
+        .strength-strong { background-color: #34d399; height: 5px; }
+        
+        /* Loading spinner */
+        .spinner {
+            border-top-color: #3b82f6;
+            animation: spinner 1.5s linear infinite;
+        }
+        
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Simulador de folha */
+        .simulator-result {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        /* Menu ativo */
+        .nav-active {
+            color: #1d4ed8;
+            font-weight: bold;
+            border-bottom: 2px solid #1d4ed8;
+        }
+        
+        /* Scroll suave */
+        html {
+            scroll-behavior: smooth;
+        }
+        
+        /* Imagem de fundo */
+        .bg-pattern {
+            background-color: #f8fafc;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        /* Menu mobile */
+        .mobile-menu {
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        .mobile-menu.active {
+            transform: translateX(0);
+        }
+        
+        /* Card flutuante */
+        .floating-card {
+            animation: pulse 3s infinite;
+        }
+        
+        /* Responsividade para vídeos */
+        .responsive-video {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 */
+            height: 0;
+            overflow: hidden;
+        }
+        
+        .responsive-video iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: 0.5rem;
+        }
+        
+        /* Ajustes para dispositivos móveis */
+        @media (max-width: 768px) {
+            .section-content {
+                padding: 1rem;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .text-lg {
+                font-size: 1rem;
+            }
+            
+            .text-xl {
+                font-size: 1.25rem;
+            }
+            
+            .text-3xl {
+                font-size: 1.875rem;
+            }
+            
+            .text-5xl {
+                font-size: 2.5rem;
+            }
+        }
+        
+        /* Dark mode */
+        .dark-mode {
+            background-color: #1a202c;
+            color: #e2e8f0;
+        }
+        
+        .dark-mode .bg-white {
+            background-color: #2d3748;
+        }
+        
+        .dark-mode .text-gray-800 {
+            color: #e2e8f0;
+        }
+        
+        .dark-mode .text-gray-700 {
+            color: #cbd5e0;
+        }
+        
+        .dark-mode .text-gray-600 {
+            color: #a0aec0;
+        }
+        
+        .dark-mode .border {
+            border-color: #4a5568;
+        }
+        
+        .dark-mode .bg-blue-50 {
+            background-color: #2c5282;
+        }
+        
+        .dark-mode .bg-green-50 {
+            background-color: #2f855a;
+        }
+        
+        .dark-mode .bg-red-50 {
+            background-color: #c53030;
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen">
+    <!-- Área de Autenticação -->
+    <div id="auth-area" class="min-h-screen flex items-center justify-center p-4">
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-md p-8 fade-in">
+            <div class="text-center mb-8">
+                <h1 class="text-3xl font-bold text-blue-700">DP FÁCIL</h1>
+                <p class="text-gray-600 mt-2">Sua plataforma de Departamento Pessoal</p>
+            </div>
+            
+            <h2 id="form-title" class="text-2xl font-bold text-gray-800 mb-6">Login</h2>
+            
+            <div id="mensagemErro" class="hidden mb-4">
+                <div class="bg-red-50 border-l-4 border-red-500 p-4 rounded">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <i class="fas fa-exclamation-circle text-red-500"></i>
+                        </div>
+                        <div class="ml-3">
+                            <p id="error-text" class="text-sm text-red-700"></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <form onsubmit="handleAuth(); return false;" class="space-y-6">
+                <div>
+                    <label for="email" class="block text-gray-700 font-medium mb-2">Email</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-envelope text-gray-400"></i>
+                        </div>
+                        <input type="email" id="email" class="w-full pl-10 pr-3 py-3 border rounded-lg input-focus" placeholder="seu@email.com" required>
+                    </div>
+                </div>
+                
+                <div>
+                    <label for="password" class="block text-gray-700 font-medium mb-2">Senha</label>
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <i class="fas fa-lock text-gray-400"></i>
+                        </div>
+                        <input type="password" id="password" class="w-full pl-10 pr-10 py-3 border rounded-lg input-focus" placeholder="••••••••" required>
+                        <button type="button" id="toggle-password" class="absolute inset-y-0 right-0 pr-3 flex items-center">
+                            <i class="fas fa-eye text-gray-400"></i>
+                        </button>
+                    </div>
+                    
+                    <div id="password-strength-container" class="mt-2 hidden">
+                        <div class="h-1 bg-gray-200 rounded-full overflow-hidden">
+                            <div id="password-strength" class="h-full rounded-full"></div>
+                        </div>
+                        <p id="strength-text" class="mt-1 text-sm"></p>
+                    </div>
+                </div>
+                
+                <div id="forgot-password" class="text-right">
+                    <a href="#" class="text-sm text-blue-600 hover:text-blue-800 hover:underline">Esqueceu sua senha?</a>
+                </div>
+                
+                <button type="submit" id="auth-button" class="w-full bg-blue-700 hover:bg-blue-800 text-white font-medium py-3 rounded-lg btn-primary flex items-center justify-center">
+                    <span id="button-text">Entrar</span>
+                    <div id="loading-spinner" class="hidden ml-2 w-4 h-4 border-2 border-white border-t-transparent rounded-full spinner"></div>
+                </button>
+            </form>
+            
+            <div class="mt-6 text-center">
+                <p id="toggle-text" class="text-gray-600">Não tem conta?</p>
+                <button onclick="toggleForm()" id="toggle-link" class="text-blue-600 font-medium hover:text-blue-800 hover:underline mt-1">Criar conta</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Conteúdo principal do site -->
+    <div id="site-content" style="display:none">
+        <header class="bg-gradient-to-r from-blue-700 to-blue-900 text-white py-8 text-center shadow-lg">
+            <h1 class="text-5xl font-bold">DP FÁCIL</h1>
+            <p class="text-xl mt-2">Tudo que você precisa saber sobre Departamento Pessoal</p>
+        </header>
+
+        <!-- Menu Desktop -->
+        <nav class="bg-white shadow-md sticky top-0 z-50 hidden md:block">
+            <div class="max-w-7xl mx-auto px-4">
+                <div class="flex flex-wrap justify-around py-3 text-blue-700 font-medium">
+                    <a href="#introducao" class="hover:underline px-2 py-1 nav-link">Início</a>
+                    <a href="#admissao" class="hover:underline px-2 py-1 nav-link">Admissão</a>
+                    <a href="#folha" class="hover:underline px-2 py-1 nav-link">Folha</a>
+                    <a href="#ferias" class="hover:underline px-2 py-1 nav-link">Férias</a>
+                    <a href="#rescisao" class="hover:underline px-2 py-1 nav-link">Rescisão</a>
+                    <a href="#encargos" class="hover:underline px-2 py-1 nav-link">Encargos</a>
+                    <a href="#dicas" class="hover:underline px-2 py-1 nav-link">Dicas</a>
+                    <a href="#quiz" class="hover:underline px-2 py-1 nav-link">Quiz</a>
+                    <a href="#simulador" class="hover:underline px-2 py-1 nav-link">Simulador</a>
+                    <button onclick="logout()" class="text-red-600 hover:underline px-2 py-1">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Menu Mobile -->
+        <div class="md:hidden bg-white shadow-md sticky top-0 z-50">
+            <div class="flex justify-between items-center p-4">
+                <div class="text-blue-700 font-bold text-lg">DP FÁCIL</div>
+                <button id="mobile-menu-button" class="text-blue-700 focus:outline-none">
+                    <i class="fas fa-bars text-2xl"></i>
+                </button>
+            </div>
+            <div id="mobile-menu" class="mobile-menu fixed top-0 left-0 w-64 h-full bg-white shadow-lg z-50 p-4">
+                <div class="flex justify-between items-center mb-8">
+                    <h2 class="text-xl font-bold text-blue-700">Menu</h2>
+                    <button id="close-menu" class="text-gray-600 focus:outline-none">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                </div>
+                <div class="flex flex-col space-y-4">
+                    <a href="#introducao" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Início</a>
+                    <a href="#admissao" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Admissão</a>
+                    <a href="#folha" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Folha</a>
+                    <a href="#ferias" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Férias</a>
+                    <a href="#rescisao" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Rescisão</a>
+                    <a href="#encargos" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Encargos</a>
+                    <a href="#dicas" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Dicas</a>
+                    <a href="#quiz" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Quiz</a>
+                    <a href="#simulador" class="text-blue-700 hover:text-blue-900 hover:underline py-2 mobile-nav-link">Simulador</a>
+                    <button onclick="logout()" class="text-red-600 hover:text-red-800 hover:underline py-2 text-left">
+                        <i class="fas fa-sign-out-alt mr-1"></i> Sair
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <main class="max-w-5xl mx-auto px-4 py-10 space-y-20">
+            <!-- Seções do conteúdo -->
+            <section id="introducao" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-home text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">O que é Departamento Pessoal?</h2>
+                </div>
+                <p class="text-lg leading-relaxed">O Departamento Pessoal é responsável pela administração dos funcionários dentro da empresa. Ele cuida desde a admissão até a demissão, passando pela folha de pagamento, férias, encargos e muito mais. Sua função principal é garantir que a empresa esteja cumprindo todas as leis trabalhistas.</p>
+                <div class="mt-6 p-4 bg-blue-50 rounded-lg border-l-4 border-blue-700">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2"><i class="fas fa-lightbulb mr-2"></i>Importante</h3>
+                    <p class="text-lg">Um bom Departamento Pessoal evita multas, processos trabalhistas e garante a satisfação dos colaboradores.</p>
+                </div>
+            </section>
+
+            <section id="admissao" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-user-plus text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">1. Processo de Admissão</h2>
+                </div>
+                <p class="text-lg leading-relaxed">A admissão é o processo de contratação de um novo colaborador. Envolve:</p>
+                <ul class="list-disc ml-6 space-y-2 text-lg">
+                    <li>Recolher documentos: RG, CPF, título de eleitor, comprovante de residência, carteira de trabalho, PIS, foto 3x4, entre outros.</li>
+                    <li>Assinatura de contrato de trabalho.</li>
+                    <li>Registro no eSocial e CAGED (se necessário).</li>
+                    <li>Entrega de equipamentos e orientações iniciais.</li>
+                </ul>
+                <div class="mt-6 responsive-video rounded-lg overflow-hidden shadow-md">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/WaLLuWn4SnE?si=pWYaFxoVb7dfEw5u&amp;start=379" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-700 rounded">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2"><i class="fas fa-clipboard-list mr-2"></i>Resumo Rápido</h3>
+                    <ul class="list-disc ml-5 text-lg space-y-1">
+                        <li>Documentos obrigatórios devem ser reunidos antes da contratação.</li>
+                        <li>Contrato de trabalho precisa ser assinado antes do início das atividades.</li>
+                        <li>Registro no eSocial é obrigatório para todas as admissões.</li>
+                        <li>Equipamentos e treinamentos devem ser entregues no início do vínculo.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="folha" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-file-invoice-dollar text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">2. Folha de Pagamento</h2>
+                </div>
+                <p class="text-lg leading-relaxed">A folha de pagamento registra todos os valores devidos a um funcionário em determinado período. O processo envolve:</p>
+                <ul class="list-disc ml-6 space-y-2 text-lg">
+                    <li>Lançamento de salário, horas extras, adicionais noturnos, comissões e descontos.</li>
+                    <li>Cálculo de INSS, FGTS, IRRF e outras obrigações legais.</li>
+                    <li>Emissão de holerite para o colaborador.</li>
+                    <li>Envio de informações ao eSocial.</li>
+                </ul>
+                <div class="mt-6 responsive-video rounded-lg overflow-hidden shadow-md">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/N4S2j_tE3R0?si=ibr0WnY5ClYZ_LPW&amp;start=4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-700 rounded">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2"><i class="fas fa-clipboard-list mr-2"></i>Resumo Rápido</h3>
+                    <ul class="list-disc ml-5 text-lg space-y-1">
+                        <li>Folha inclui salários, adicionais e descontos legais.</li>
+                        <li>INSS, FGTS e IRRF devem ser calculados corretamente.</li>
+                        <li>O holerite precisa ser entregue ao colaborador.</li>
+                        <li>Informações devem ser transmitidas via eSocial.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="ferias" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-umbrella-beach text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">3. Férias</h2>
+                </div>
+                <p class="text-lg leading-relaxed">O direito a férias é adquirido após 12 meses de trabalho. Veja como administrar esse processo:</p>
+                <ul class="list-disc ml-6 space-y-2 text-lg">
+                    <li>Cálculo das férias: salário + 1/3 constitucional.</li>
+                    <li>Aviso de férias deve ser feito com antecedência mínima de 30 dias.</li>
+                    <li>Pagamento deve ser feito até dois dias antes do início das férias.</li>
+                    <li>Registro e envio ao eSocial.</li>
+                </ul>
+                <div class="mt-6 responsive-video rounded-lg overflow-hidden shadow-md">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/XWh885vHgos?si=hnvVk4I9MEEovM0E&amp;start=3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-700 rounded">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2"><i class="fas fa-clipboard-list mr-2"></i>Resumo Rápido</h3>
+                    <ul class="list-disc ml-5 text-lg space-y-1">
+                        <li>Férias são adquiridas após 12 meses de trabalho.</li>
+                        <li>Devem ser avisadas com 30 dias de antecedência.</li>
+                        <li>Pagamento deve ser feito até 2 dias antes do início.</li>
+                        <li>1/3 constitucional deve ser incluído no cálculo.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="rescisao" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-user-times text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">4. Rescisão de Contrato</h2>
+                </div>
+                <p class="text-lg leading-relaxed">A rescisão é o encerramento do vínculo trabalhista. Pode ser por iniciativa do empregador, do empregado ou em comum acordo. Envolve:</p>
+                <ul class="list-disc ml-6 space-y-2 text-lg">
+                    <li>Pagamento de verbas rescisórias: saldo de salário, férias proporcionais, 13º salário proporcional, aviso prévio, entre outros.</li>
+                    <li>Entrega do TRCT, guias do FGTS e seguro-desemprego.</li>
+                    <li>Prazo de pagamento: até 10 dias corridos após o desligamento.</li>
+                    <li>Registro da rescisão no eSocial.</li>
+                </ul>
+                <div class="mt-6 responsive-video rounded-lg overflow-hidden shadow-md">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/MWtkwDb3504?si=RXMCG0Upr1MzMBbU&amp;start=3" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-700 rounded">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2"><i class="fas fa-clipboard-list mr-2"></i>Resumo Rápido</h3>
+                    <ul class="list-disc ml-5 text-lg space-y-1">
+                        <li>A rescisão pode ser por iniciativa do empregado ou empregador.</li>
+                        <li>Verbas incluem: saldo de salário, férias, 13º, aviso, etc.</li>
+                        <li>O pagamento deve ocorrer em até 10 dias corridos.</li>
+                        <li>É obrigatório registrar a rescisão no eSocial.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="encargos" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-calculator text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">5. Encargos Trabalhistas</h2>
+                </div>
+                <p class="text-lg leading-relaxed">Encargos são os tributos e contribuições obrigatórias decorrentes do contrato de trabalho. Eles incluem:</p>
+                <ul class="list-disc ml-6 space-y-2 text-lg">
+                    <li><strong>INSS:</strong> Contribuição previdenciária que varia de acordo com a faixa salarial do colaborador.</li>
+                    <li><strong>FGTS:</strong> Depósito mensal de 8% sobre o salário do empregado.</li>
+                    <li><strong>IRRF:</strong> Imposto de Renda Retido na Fonte, conforme tabela da Receita Federal.</li>
+                    <li>Recolhimentos via SEFIP, DCTFWeb, GPS e demais guias obrigatórias.</li>
+                </ul>
+                <div class="mt-6 responsive-video rounded-lg overflow-hidden shadow-md">
+                    <iframe width="560" height="315" src="https://www.youtube.com/embed/T6j065C8_Gg?si=BmK6f-TD60aa6hTU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                </div>
+                <div class="mt-6 p-4 bg-blue-50 border-l-4 border-blue-700 rounded">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2"><i class="fas fa-clipboard-list mr-2"></i>Resumo Rápido</h3>
+                    <ul class="list-disc ml-5 text-lg space-y-1">
+                        <li>Encargos são obrigações legais: INSS, FGTS e IRRF.</li>
+                        <li>Devem ser recolhidos nos prazos corretos (via guias).</li>
+                        <li>O não recolhimento gera multas e problemas fiscais.</li>
+                        <li>Utilize softwares de DP para garantir conformidade.</li>
+                    </ul>
+                </div>
+            </section>
+
+            <section id="dicas" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-lightbulb text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">Dicas Importantes</h2>
+                </div>
+                <ul class="list-disc ml-6 space-y-2 text-lg">
+                    <li>Organize os documentos dos colaboradores digitalmente.</li>
+                    <li>Mantenha-se atualizado com as constantes mudanças na legislação trabalhista.</li>
+                    <li>Use sistemas de DP e RH confiáveis para evitar erros e retrabalhos.</li>
+                    <li>Planeje férias e rescisões com antecedência para cumprir os prazos legais.</li>
+                    <li>Invista em treinamentos contínuos para dominar o eSocial e as ferramentas digitais.</li>
+                </ul>
+                <div class="mt-6 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                    <h3 class="text-xl font-semibold text-green-700 mb-2"><i class="fas fa-star mr-2"></i>Dica Extra</h3>
+                    <p class="text-lg">Participe de webinars e grupos de discussão sobre DP para trocar experiências com outros profissionais da área.</p>
+                </div>
+            </section>
+
+            <section id="simulador" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-calculator text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">Simulador de Folha de Pagamento</h2>
+                </div>
+                <form id="formFolha" class="space-y-4">
+                    <div>
+                        <label for="salarioBruto" class="block font-medium text-lg">Salário Bruto (R$)</label>
+                        <input type="number" id="salarioBruto" class="w-full p-3 border rounded-lg input-focus" required min="0" step="0.01" placeholder="Ex: 2500">
+                    </div>
+                    <div>
+                        <label for="horasExtras" class="block font-medium text-lg">Horas Extras (R$)</label>
+                        <input type="number" id="horasExtras" class="w-full p-3 border rounded-lg input-focus" value="0" min="0" step="0.01" placeholder="Ex: 200">
+                    </div>
+                    <div>
+                        <label for="descontos" class="block font-medium text-lg">Descontos (VT, VR, etc.) (R$)</label>
+                        <input type="number" id="descontos" class="w-full p-3 border rounded-lg input-focus" value="0" min="0" step="0.01" placeholder="Ex: 150">
+                    </div>
+                    <div>
+                        <label for="dependentes" class="block font-medium text-lg">Número de Dependentes para IRRF</label>
+                        <input type="number" id="dependentes" class="w-full p-3 border rounded-lg input-focus" value="0" min="0" step="1" placeholder="Ex: 1">
+                    </div>
+                    <div>
+                        <label for="outrosDescontos" class="block font-medium text-lg">Outros Descontos (Adiantamentos, etc.)</label>
+                        <input type="number" id="outrosDescontos" class="w-full p-3 border rounded-lg input-focus" value="0" min="0" step="0.01" placeholder="Ex: 300">
+                    </div>
+                    <button type="submit" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg btn-primary font-medium w-full">Calcular</button>
+                </form>
+
+                <div id="resultadoFolha" class="mt-6 text-lg simulator-result hidden"></div>
+            </section>
+
+            <section id="quiz" class="bg-white rounded-xl shadow-lg p-6 section-transition section-content">
+                <div class="flex flex-col md:flex-row items-center mb-4">
+                    <i class="fas fa-question-circle text-blue-700 text-2xl md:text-3xl mr-3 mb-2 md:mb-0"></i>
+                    <h2 class="text-3xl font-bold text-blue-700 text-center md:text-left">Quiz de Conhecimentos em Departamento Pessoal</h2>
+                </div>
+                <form id="quizForm" class="space-y-6 text-lg">
+                    <!-- Perguntas do quiz -->
+                    <div class="quiz-option">
+                        <p class="font-semibold">1. Qual documento NÃO é obrigatório na admissão de um colaborador?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q1" value="a" class="mr-2">RG</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q1" value="b" class="mr-2">CPF</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q1" value="c" class="mr-2">Título de eleitor</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q1" value="d" class="mr-2">Certidão de nascimento</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">2. O pagamento das férias deve ser realizado:</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q2" value="a" class="mr-2">No primeiro dia útil após o início</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q2" value="b" class="mr-2">Até dois dias antes do início</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q2" value="c" class="mr-2">Junto com o salário do mês</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q2" value="d" class="mr-2">No último dia útil do mês</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">3. Qual é o percentual do FGTS sobre o salário?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q3" value="a" class="mr-2">5%</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q3" value="b" class="mr-2">6%</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q3" value="c" class="mr-2">8%</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q3" value="d" class="mr-2">11%</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">4. Qual o prazo máximo para pagamento das verbas rescisórias?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q4" value="a" class="mr-2">5 dias úteis</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q4" value="b" class="mr-2">7 dias corridos</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q4" value="c" class="mr-2">10 dias corridos</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q4" value="d" class="mr-2">15 dias corridos</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">5. O que deve ser pago no mês do 13º salário?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q5" value="a" class="mr-2">Apenas metade do salário</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q5" value="b" class="mr-2">13º integral</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q5" value="c" class="mr-2">1/3 do salário</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q5" value="d" class="mr-2">INSS do mês seguinte</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">6. Qual desses eventos deve ser obrigatoriamente lançado no eSocial?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q6" value="a" class="mr-2">Compra de equipamentos</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q6" value="b" class="mr-2">Férias de um funcionário</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q6" value="c" class="mr-2">Troca de fornecedor</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q6" value="d" class="mr-2">Troca de endereço da empresa</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">7. Qual é o valor do adicional de férias previsto na Constituição?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q7" value="a" class="mr-2">20%</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q7" value="b" class="mr-2">25%</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q7" value="c" class="mr-2">33,33%</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q7" value="d" class="mr-2">50%</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">8. A DCTFWeb é uma obrigação acessória relacionada a:</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q8" value="a" class="mr-2">Tributos federais</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q8" value="b" class="mr-2">Impostos estaduais</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q8" value="c" class="mr-2">Folha de ponto</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q8" value="d" class="mr-2">FGTS</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">9. O que é SEFIP?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q9" value="a" class="mr-2">Sistema de folha de pagamento online</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q9" value="b" class="mr-2">Sistema de recolhimento de encargos trabalhistas e previdenciários</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q9" value="c" class="mr-2">Portal de admissão digital</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q9" value="d" class="mr-2">Sistema eletrônico do eSocial</label>
+                    </div>
+
+                    <div class="quiz-option">
+                        <p class="font-semibold">10. Quem é responsável pelo recolhimento do INSS?</p>
+                        <label class="flex items-center mt-2"><input type="radio" name="q10" value="a" class="mr-2">Somente o empregado</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q10" value="b" class="mr-2">Somente o governo</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q10" value="c" class="mr-2">Somente o contador</label>
+                        <label class="flex items-center mt-2"><input type="radio" name="q10" value="d" class="mr-2">Empregador e empregado</label>
+                    </div>
+
+                    <div class="flex justify-center mt-4">
+                        <button type="button" onclick="corrigirQuiz()" class="bg-blue-700 hover:bg-blue-800 text-white px-6 py-3 rounded-lg btn-primary font-medium">Ver Resultado</button>
+                    </div>
+                </form>
+
+                <div id="resultadoQuiz" class="mt-6 text-xl font-semibold text-green-700"></div>
+            </section>
+        </main>
+
+        <button onclick="scrollToTop()" class="fixed bottom-6 right-6 bg-blue-700 hover:bg-blue-800 text-white px-4 py-3 rounded-full shadow-lg transition-all duration-300 z-40" aria-label="Voltar ao topo">
+            <i class="fas fa-arrow-up"></i>
+        </button>
+
+        <footer class="bg-gradient-to-r from-blue-800 to-blue-900 text-white py-8 text-center mt-20">
+            <div class="max-w-5xl mx-auto px-4">
+                <p class="text-lg">&copy; 2025 DP FÁCIL - Desenvolvido por José Luiz</p>
+                <div class="mt-4 flex justify-center space-x-6">
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="text-white hover:text-blue-200 transition-colors"><i class="fab fa-instagram"></i></a>
+                </div>
+                <div class="mt-4 flex justify-center items-center space-x-4">
+                    <button id="dark-mode-toggle" class="text-white hover:text-blue-200 transition-colors">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    <span class="text-sm">Modo Escuro</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Firebase e Autenticação -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+        import {
+            getAuth,
+            createUserWithEmailAndPassword,
+            signInWithEmailAndPassword,
+            signOut,
+            onAuthStateChanged,
+            setPersistence,
+            browserSessionPersistence,
+            sendPasswordResetEmail
+        } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDDaiF9DKjJy0gXzl8M8ZgbUMrVxWUyZ0U",
+            authDomain: "dp---facil.firebaseapp.com",
+            projectId: "dp---facil",
+            storageBucket: "dp---facil.appspot.com",
+            messagingSenderId: "557680534646",
+            appId: "1:557680534646:web:xxxxxxx" // Substitua pelo seu appId real
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        let isLogin = true;
+        
+        // Função para alternar entre login e cadastro
+        window.toggleForm = function () {
+            isLogin = !isLogin;
+            
+            const formTitle = document.getElementById('form-title');
+            const buttonText = document.getElementById('button-text');
+            const toggleText = document.getElementById('toggle-text');
+            const toggleLink = document.getElementById('toggle-link');
+            const forgotPassword = document.getElementById('forgot-password');
+            const passwordStrengthContainer = document.getElementById('password-strength-container');
+            
+            formTitle.innerText = isLogin ? 'Login' : 'Criar Conta';
+            buttonText.innerText = isLogin ? 'Entrar' : 'Cadastrar';
+            toggleText.innerText = isLogin ? 'Não tem conta?' : 'Já tem conta?';
+            toggleLink.innerText = isLogin ? 'Criar conta' : 'Entrar';
+            
+            if (isLogin) {
+                forgotPassword.classList.remove('hidden');
+                passwordStrengthContainer.classList.add('hidden');
+            } else {
+                forgotPassword.classList.add('hidden');
+                passwordStrengthContainer.classList.remove('hidden');
+            }
+            
+            // Limpar mensagens de erro
+            document.getElementById("mensagemErro").classList.add('hidden');
+            
+            // Adicionar animação de transição
+            document.querySelector('.bg-white').classList.add('fade-in');
+        };
+        
+        // Função para mostrar/ocultar senha
+        document.getElementById('toggle-password').addEventListener('click', function() {
+            const passwordInput = document.getElementById('password');
+            const icon = this.querySelector('i');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        });
+        
+        // Função para verificar força da senha
+        document.getElementById('password').addEventListener('input', function() {
+            if (!isLogin) {
+                const password = this.value;
+                const strengthIndicator = document.getElementById('password-strength');
+                const strengthText = document.getElementById('strength-text');
+                
+                // Remover classes anteriores
+                strengthIndicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+                
+                // Verificar força da senha
+                if (password.length < 6) {
+                    strengthIndicator.classList.add('strength-weak');
+                    strengthText.textContent = 'Fraca';
+                    strengthText.className = 'font-medium text-red-500';
+                } else if (password.length < 10 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+                    strengthIndicator.classList.add('strength-medium');
+                    strengthText.textContent = 'Média';
+                    strengthText.className = 'font-medium text-yellow-500';
+                } else {
+                    strengthIndicator.classList.add('strength-strong');
+                    strengthText.textContent = 'Forte';
+                    strengthText.className = 'font-medium text-green-500';
+                }
+            }
+        });
+        
+        // Função para redefinição de senha
+        document.getElementById('forgot-password').addEventListener('click', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const errorContainer = document.getElementById('mensagemErro');
+            const errorText = document.getElementById('error-text');
+            
+            if (!email) {
+                errorContainer.classList.remove('hidden');
+                errorText.textContent = 'Por favor, digite seu email para redefinir a senha.';
+                return;
+            }
+            
+            try {
+                await sendPasswordResetEmail(auth, email);
+                errorContainer.classList.remove('hidden');
+                errorText.innerHTML = '<i class="fas fa-check-circle mr-2"></i>Email de redefinição enviado! Verifique sua caixa de entrada.';
+                errorContainer.querySelector('.bg-red-50').classList.remove('bg-red-50', 'border-red-500');
+                errorContainer.querySelector('.bg-red-50').classList.add('bg-green-50', 'border-green-500');
+                errorContainer.querySelector('.text-red-700').classList.remove('text-red-700');
+                errorContainer.querySelector('.text-red-700').classList.add('text-green-700');
+                errorContainer.querySelector('.text-red-500').classList.remove('text-red-500');
+                errorContainer.querySelector('.text-red-500').classList.add('text-green-500');
+            } catch (error) {
+                errorContainer.classList.remove('hidden');
+                errorText.textContent = 'Erro ao enviar email de redefinição. Verifique se o email está correto.';
+            }
+        });
+        
+        // Função de autenticação
+        window.handleAuth = async function () {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+            const erroEl = document.getElementById("mensagemErro");
+            const errorText = document.getElementById("error-text");
+            const loadingSpinner = document.getElementById("loading-spinner");
+            const buttonText = document.getElementById("button-text");
+            const authButton = document.getElementById("auth-button");
+            
+            // Validação básica
+            if (!email || !password) {
+                erroEl.classList.remove('hidden');
+                errorText.textContent = 'Por favor, preencha todos os campos.';
+                return;
+            }
+            
+            // Validação de email
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                erroEl.classList.remove('hidden');
+                errorText.textContent = 'Por favor, digite um email válido.';
+                return;
+            }
+            
+            // Validação de força da senha para cadastro
+            if (!isLogin && password.length < 6) {
+                erroEl.classList.remove('hidden');
+                errorText.textContent = 'A senha deve ter pelo menos 6 caracteres.';
+                return;
+            }
+            
+            // Mostrar loading
+            loadingSpinner.classList.remove('hidden');
+            buttonText.textContent = isLogin ? 'Entrando...' : 'Cadastrando...';
+            authButton.disabled = true;
+            
+            // Resetar mensagem de erro
+            erroEl.classList.add('hidden');
+            
+            const errosFirebase = {
+                "auth/email-already-in-use": "Este e-mail já está em uso.",
+                "auth/invalid-email": "E-mail inválido.",
+                "auth/weak-password": "A senha deve ter pelo menos 6 caracteres.",
+                "auth/wrong-password": "Senha incorreta.",
+                "auth/user-not-found": "Usuário não encontrado.",
+                "auth/too-many-requests": "Muitas tentativas. Tente novamente mais tarde.",
+                "auth/network-request-failed": "Erro de conexão. Verifique sua internet.",
+                "auth/invalid-credential": "Credenciais inválidas. Verifique email e senha."
+            };
+
+            try {
+                await setPersistence(auth, browserSessionPersistence);
+
+                let userCredential;
+                if (isLogin) {
+                    userCredential = await signInWithEmailAndPassword(auth, email, password);
+                } else {
+                    userCredential = await createUserWithEmailAndPassword(auth, email, password);
+                }
+
+                // Redirecionar após login/cadastro bem-sucedido
+                window.location.reload();
+            } catch (error) {
+                const mensagem = errosFirebase[error.code] || "Erro ao autenticar. Tente novamente.";
+                erroEl.classList.remove('hidden');
+                errorText.textContent = mensagem;
+                
+                // Resetar botão
+                loadingSpinner.classList.add('hidden');
+                buttonText.textContent = isLogin ? 'Entrar' : 'Cadastrar';
+                authButton.disabled = false;
+            }
+        };
+
+        window.logout = function () {
+            signOut(auth).then(() => {
+                window.location.reload();
+            }).catch((error) => {
+                console.error("Erro ao fazer logout:", error);
+            });
+        };
+
+        // Verificar estado de autenticação
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                document.getElementById("auth-area").style.display = "none";
+                document.getElementById("site-content").style.display = "block";
+                
+                // Inicializar funcionalidades do site após login
+                initSiteContent();
+            } else {
+                document.getElementById("auth-area").style.display = "flex";
+                document.getElementById("site-content").style.display = "none";
+            }
+        });
+        
+        // Função para inicializar o conteúdo do site após login
+        function initSiteContent() {
+            // Função para voltar ao topo
+            window.scrollToTop = function() {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            };
+            
+            // Função para corrigir o quiz
+            window.corrigirQuiz = function() {
+                const respostas = {
+                    q1: { correta: "d", explicacao: "A certidão de nascimento não é obrigatória na admissão de um colaborador adulto, diferentemente de documentos como RG, CPF e CTPS." },
+                    q2: { correta: "b", explicacao: "O pagamento das férias deve ser feito até dois dias antes do início, conforme a CLT." },
+                    q3: { correta: "c", explicacao: "O FGTS corresponde a 8% do salário do trabalhador e deve ser depositado mensalmente pelo empregador." },
+                    q4: { correta: "c", explicacao: "A legislação determina que as verbas rescisórias devem ser pagas em até 10 dias corridos após o desligamento." },
+                    q5: { correta: "b", explicacao: "O 13º salário deve ser pago em duas parcelas, sendo a segunda até 20 de dezembro. O valor total equivale ao salário integral proporcional." },
+                    q6: { correta: "b", explicacao: "Férias são eventos obrigatórios no eSocial e devem ser informadas com antecedência." },
+                    q7: { correta: "c", explicacao: "O adicional de férias é de 1/3 do salário normal, ou seja, 33,33%, conforme a Constituição Federal." },
+                    q8: { correta: "a", explicacao: "A DCTFWeb é usada para declarar e recolher tributos federais decorrentes da folha de pagamento." },
+                    q9: { correta: "b", explicacao: "SEFIP é o Sistema de Recolhimento do FGTS e de Informações à Previdência Social." },
+                    q10: { correta: "d", explicacao: "O INSS é recolhido tanto pelo empregador (parte patronal) quanto pelo empregado (descontado em folha)." }
+                };
+
+                let acertos = 0;
+                const resultado = document.getElementById("resultadoQuiz");
+                resultado.innerHTML = "";
+
+                // Verificar se todas as perguntas foram respondidas
+                let todasRespondidas = true;
+                Object.keys(respostas).forEach(q => {
+                    if (!document.querySelector(`input[name="${q}"]:checked`)) {
+                        todasRespondidas = false;
+                    }
+                });
+
+                if (!todasRespondidas) {
+                    resultado.innerHTML = `<p class="text-xl font-bold mt-4 text-red-600">Por favor, responda todas as perguntas antes de verificar o resultado.</p>`;
+                    resultado.scrollIntoView({ behavior: "smooth" });
+                    return;
+                }
+
+                Object.keys(respostas).forEach((q, i) => {
+                    const selecionada = document.querySelector(`input[name="${q}"]:checked`);
+                    const correta = respostas[q].correta;
+                    const explicacao = respostas[q].explicacao;
+
+                    const container = document.querySelector(`input[name="${q}"]`).closest("div");
+                    const paragrafo = container.querySelector("p");
+                    const feedback = document.createElement("div");
+                    feedback.classList.add("mt-2", "p-3", "rounded-lg", "text-base");
+
+                    if (selecionada && selecionada.value === correta) {
+                        acertos++;
+                        feedback.classList.add("bg-green-100", "text-green-800");
+                        feedback.innerHTML = `<i class="fas fa-check-circle mr-2"></i>Correto! ${explicacao}`;
+                    } else {
+                        feedback.classList.add("bg-red-100", "text-red-800");
+                        const respostaCorretaTexto = container.querySelector(`input[value="${correta}"]`).parentElement.textContent;
+                        feedback.innerHTML = `<i class="fas fa-times-circle mr-2"></i>Errado. A resposta correta é: <strong>${respostaCorretaTexto}</strong><br>${explicacao}`;
+                    }
+
+                    container.appendChild(feedback);
+                });
+
+                const porcentagem = Math.round((acertos / 10) * 100);
+                let mensagemDesempenho = "";
+                let iconeDesempenho = "";
+                
+                if (porcentagem >= 90) {
+                    mensagemDesempenho = "Excelente! Você tem um ótimo conhecimento em DP!";
+                    iconeDesempenho = "fa-trophy";
+                } else if (porcentagem >= 70) {
+                    mensagemDesempenho = "Bom trabalho! Continue estudando para melhorar ainda mais.";
+                    iconeDesempenho = "fa-thumbs-up";
+                } else if (porcentagem >= 50) {
+                    mensagemDesempenho = "Você está no caminho certo! Revise os pontos fracos e tente novamente.";
+                    iconeDesempenho = "fa-book-open";
+                } else {
+                    mensagemDesempenho = "Recomendamos estudar mais sobre os temas abordados. Tente novamente após revisar o conteúdo.";
+                    iconeDesempenho = "fa-exclamation-triangle";
+                }
+
+                resultado.innerHTML = `
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 shadow-md">
+                        <div class="flex flex-col md:flex-row items-center">
+                            <i class="fas ${iconeDesempenho} text-blue-600 text-3xl mr-4 mb-4 md:mb-0"></i>
+                            <div>
+                                <p class="text-xl font-bold mt-2">Você acertou <span class="text-blue-700">${acertos}</span> de 10 perguntas (${porcentagem}%).</p>
+                                <p class="mt-2">${mensagemDesempenho}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="window.location.reload()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg btn-primary text-sm">
+                                <i class="fas fa-redo mr-2"></i>Tentar Novamente
+                            </button>
+                        </div>
+                    </div>
+                `;
+                resultado.scrollIntoView({ behavior: "smooth" });
+            };
+            
+            // Função para calcular folha de pagamento
+            document.getElementById("formFolha").addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                const salarioBruto = parseFloat(document.getElementById("salarioBruto").value);
+                const horasExtras = parseFloat(document.getElementById("horasExtras").value);
+                const descontos = parseFloat(document.getElementById("descontos").value);
+                const dependentes = parseInt(document.getElementById("dependentes").value) || 0;
+                const outrosDescontos = parseFloat(document.getElementById("outrosDescontos").value) || 0;
+                const resultadoDiv = document.getElementById("resultadoFolha");
+
+                // Validação básica
+                if (isNaN(salarioBruto) || salarioBruto <= 0) {
+                    resultadoDiv.innerHTML = '<div class="bg-red-50 p-4 rounded-lg border-l-4 border-red-500"><p class="text-red-600"><i class="fas fa-exclamation-circle mr-2"></i>Por favor, digite um salário bruto válido.</p></div>';
+                    resultadoDiv.classList.remove('hidden');
+                    return;
+                }
+
+                const baseINSS = salarioBruto + horasExtras;
+                let inss = 0;
+
+                // Cálculo do INSS (2025)
+                if (baseINSS <= 1412) inss = baseINSS * 0.075;
+                else if (baseINSS <= 2666.68) inss = baseINSS * 0.09 - 21.18;
+                else if (baseINSS <= 4000.03) inss = baseINSS * 0.12 - 101.18;
+                else if (baseINSS <= 7786.02) inss = baseINSS * 0.14 - 181.18;
+                else inss = 908.86;
+
+                const fgts = baseINSS * 0.08;
+
+                // IRRF com dependentes (2025)
+                let irrf = 0;
+                const baseIR = baseINSS - inss - (dependentes * 189.59);
+                if (baseIR > 2112) {
+                    if (baseIR <= 2826.65) irrf = baseIR * 0.075 - 158.4;
+                    else if (baseIR <= 3751.05) irrf = baseIR * 0.15 - 370.4;
+                    else if (baseIR <= 4664.68) irrf = baseIR * 0.225 - 651.73;
+                    else irrf = baseIR * 0.275 - 884.96;
+                }
+
+                const liquido = baseINSS - inss - irrf - descontos - outrosDescontos;
+
+                resultadoDiv.innerHTML = `
+                    <div class="bg-blue-50 p-6 rounded-lg border-l-4 border-blue-500 shadow-md">
+                        <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-calculator text-blue-600 mr-2"></i>Resultado da Simulação</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>Salário Bruto:</strong> R$ ${salarioBruto.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>Horas Extras:</strong> R$ ${horasExtras.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>Descontos (VT, VR):</strong> R$ ${descontos.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>Outros Descontos:</strong> R$ ${outrosDescontos.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>INSS:</strong> R$ ${inss.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>FGTS (a cargo da empresa):</strong> R$ ${fgts.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>IRRF:</strong> R$ ${irrf.toFixed(2)}</p>
+                            </div>
+                            <div class="bg-white p-3 rounded-lg shadow">
+                                <p><strong>Dependentes:</strong> ${dependentes}</p>
+                            </div>
+                        </div>
+                        <div class="mt-4 p-4 bg-green-50 rounded-lg border-l-4 border-green-500">
+                            <p class="text-lg"><strong>Salário Líquido:</strong> <span class="text-green-700 font-bold">R$ ${liquido.toFixed(2)}</span></p>
+                        </div>
+                        <div class="mt-4 text-sm text-gray-600">
+                            <p><i class="fas fa-info-circle mr-1"></i>Valores calculados com base na legislação vigente em 2025.</p>
+                            <p><i class="fas fa-info-circle mr-1"></i>Esta simulação tem caráter informativo e pode não refletir valores exatos.</p>
+                        </div>
+                        <div class="mt-4">
+                            <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg btn-primary text-sm">
+                                <i class="fas fa-print mr-2"></i>Imprimir Resultado
+                            </button>
+                        </div>
+                    </div>
+                `;
+                resultadoDiv.classList.remove('hidden');
+            });
+            
+            // Destacar seção ativa no menu
+            const sections = document.querySelectorAll('section[id]');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    const sectionHeight = section.clientHeight;
+                    if (scrollY >= (sectionTop - 200)) {
+                        current = section.getAttribute('id');
+                    }
+                });
+                
+                navLinks.forEach(link => {
+                    link.classList.remove('nav-active');
+                    if (link.getAttribute('href').slice(1) === current) {
+                        link.classList.add('nav-active');
+                    }
+                });
+            });
+            
+            // Menu mobile
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const closeMenu = document.getElementById('close-menu');
+            const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
+            
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.add('active');
+            });
+            
+            closeMenu.addEventListener('click', () => {
+                mobileMenu.classList.remove('active');
+            });
+            
+            mobileNavLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    mobileMenu.classList.remove('active');
+                });
+            });
+            
+            // Dark mode toggle
+            const darkModeToggle = document.getElementById('dark-mode-toggle');
+            const body = document.body;
+            
+            darkModeToggle.addEventListener('click', () => {
+                body.classList.toggle('dark-mode');
+                
+                // Salvar preferência no localStorage
+                if (body.classList.contains('dark-mode')) {
+                    localStorage.setItem('darkMode', 'enabled');
+                    darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+                } else {
+                    localStorage.setItem('darkMode', 'disabled');
+                    darkModeToggle.innerHTML = '<i class="fas fa-moon"></i>';
+                }
+            });
+            
+            // Verificar preferência salva
+            if (localStorage.getItem('darkMode') === 'enabled') {
+                body.classList.add('dark-mode');
+                darkModeToggle.innerHTML = '<i class="fas fa-sun"></i>';
+            }
+        }
+    </script>
+</body>
+</html>
