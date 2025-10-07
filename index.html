@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta name="description" content="DP FÁCIL — simuladores e guias práticos de Departamento Pessoal. Calcule INSS, IRRF e salário líquido de forma rápida.">
+    <meta property="og:title" content="DP FÁCIL">
+    <meta property="og:description" content="Simuladores e guias práticos de DP">
+    <meta property="og:type" content="website">
+    <meta name="theme-color" content="#1e3a8a">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='0.9em' font-size='90'>📘</text></svg>">
+    <script>
+      window.tailwind = window.tailwind || {};
+      tailwind.config = { darkMode: 'class' };
+      // Persist theme
+      (function() {
+        const preferred = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        if (preferred === 'dark') document.documentElement.classList.add('dark');
+      })();
+    </script>
+    <style>
+      /* Small polish */
+      html, body { height: 100%; }
+      .container { max-width: 72rem; margin: 0 auto; }
+      .btn { @apply bg-blue-700 text-white py-2 px-3 rounded hover:bg-blue-800 transition; }
+    </style>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DP FÁCIL</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" />
+    <link rel="manifest" href="/manifest.webmanifest">
+
+  <style media="print">
+    header, footer, #menuBtn, #themeBtn { display: none !important; }
+    main { padding: 0 !important; }
+    .print\:hidden { display: none !important; }
+  </style>
+</head>
+  <body class="bg-gray-100">
+    <div id="app"></div>
+    <script type="module" src="/src/main.js"></script>
+  
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+    }
+  </script>
+</body>
+</html>
